@@ -10,12 +10,14 @@ using Core.Interfaces;
 using Core.Specifications;
 using API.Dtos;
 using AutoMapper;
+using API.Errors;
 
 namespace API.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]     // in this case controller will be replaced by "Products"
-    public class ProductsController : ControllerBase
+    //[ApiController]
+    //[Route("api/[controller]")]     // in this case controller will be replaced by "Products"
+    //public class ProductsController : ControllerBase
+    public class ProductsController : BaseApiController
     {
         private readonly IGenericRepository<Product> _productsRepo;
         private readonly IGenericRepository<ProductType> _productTypeRepo;
@@ -55,7 +57,7 @@ namespace API.Controllers
 
             }).ToList();*/
             // map from IReadOnlyList<Product> - to IReadOnlyList<ProductToReturnDto>>(products)
-            return Ok(_mapper.Map<IReadOnlyList<Product>,IReadOnlyList<ProductToReturnDto>>(products));
+            return Ok(_mapper.Map<IReadOnlyList<Product>, IReadOnlyList<ProductToReturnDto>>(products));
 
         }
 
@@ -63,6 +65,8 @@ namespace API.Controllers
         [HttpGet("{id}")]       // https://localhost:5001/api/products/34
                                 // async method, its going to return a task of ActionResult.
                                 // In this case we are returning a single ProductToReturnDto
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<ProductToReturnDto>> GetProduct(int id)
         {
             var spec = new ProductsWithTypesAndBrandsSpecification(id);
@@ -79,6 +83,8 @@ namespace API.Controllers
                 ProductBrand = product.ProductBrand.Name,
                 ProductType = product.ProductType.Name
             };*/
+
+            if (product == null) return NotFound(new ApiResponse(404));
 
             // map from Product to ProductToReturnDto
             return _mapper.Map<Product, ProductToReturnDto>(product);
