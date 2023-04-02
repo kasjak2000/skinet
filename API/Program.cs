@@ -19,7 +19,9 @@ builder.Services.AddDbContext<StoreContext>(opt =>
 
 // Now webapi knows, that it needs to use ProductRepository class, whenever a contoller wants to inject the IProductRepository.
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
-
+builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+// for automapper
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 
 
@@ -35,6 +37,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// server static files
+app.UseStaticFiles();
 
 app.UseAuthorization();
 
