@@ -72,6 +72,9 @@ app.UseHttpsRedirection();
 // server static files
 app.UseStaticFiles();
 
+// see ApplicationServicesExtensions class
+app.UseCors("CorsPolicy");
+
 app.UseAuthorization();
 
 app.MapControllers();

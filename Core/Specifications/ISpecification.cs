@@ -12,7 +12,13 @@ namespace Core.Specifications
         Expression<Func<T, bool>> Criteria { get; }
         // List takes an expression and use the function of type T, returns an object
         List<Expression<Func<T, object>>> Includes { get; }
-
+        Expression<Func<T, object>> OrderBy { get; }
+        Expression<Func<T, object>> OrderByDescending { get; }
+// take certain amount of products
+        int Take { get; }
+        // skip certain amount of products
+        int Skip { get; }
+        bool IsPagingEnabled { get; }
 
     }
 }
